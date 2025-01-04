@@ -5,6 +5,15 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [items, setItems] = useState(["Item 1", "Item 2", "Item 3"]);
+
+  const addItem = () => {
+    setItems([...items, `Item ${items.length + 1}`]);
+  };
+
+  function resetItems() {
+    setItems([]);
+  }
 
   return (
     <>
@@ -24,6 +33,14 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
+      </div>
+      <div className="card">
+        <button onClick={addItem}><em>Click me to add items</em></button>
+        <ul id="firstList">
+          {items.map((item, index) => (<li key={index}>{item}</li>))}
+        </ul>
+
+        <button type="reset" onClick={resetItems}>Reset list</button>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
