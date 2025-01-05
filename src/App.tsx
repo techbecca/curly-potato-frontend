@@ -1,11 +1,14 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
+import fetchList from "./api/fetchList.ts";
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-  const [items, setItems] = useState(["Item 1", "Item 2", "Item 3"]);
+  const [items, setItems] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>();
 
   const addItem = () => {
     setItems([...items, `Item ${items.length + 1}`]);
@@ -14,6 +17,29 @@ function App() {
   function resetItems() {
     setItems([]);
   }
+
+  function handleError(err: Error | unknown) {
+    if (err instanceof Error) {
+      setError(err.message);
+    } else {
+      setError("An unknown error occurred");
+    }
+  }
+
+  useEffect(() => {
+    fetchList()
+      .then(data => setItems(data))
+      .catch(err => {
+        handleError(err);
+      })
+      .finally(() => {
+        console.log("Fetch resolved");
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <>
@@ -25,7 +51,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Vite + React + Typescript</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
