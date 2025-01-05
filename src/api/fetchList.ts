@@ -7,8 +7,9 @@ const fetchList = async () => {
       return data;
     })
     .catch((error) => {
+      //todo: implement better error handling
       console.error('Error:', error)
-      return ['Error string'];
+      throw error;
     })
 
 }
